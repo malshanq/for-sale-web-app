@@ -1,0 +1,176 @@
+import os
+
+# Create folders and save the content for index.html, styles.css, and app.js
+folders = ['/mnt/data/for_sale_app']
+files = {
+    'index.html': """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>For Sale</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+
+        <div class="container">
+            <h1>For Sale</h1>
+
+            <!-- Form to add new item -->
+            <form id="itemForm">
+                <input type="text" id="itemName" placeholder="Item Name" required />
+                <input type="number" id="itemPrice" placeholder="Item Price ($)" required />
+                <input type="file" id="itemImage" accept="image/*" required />
+                <button type="submit">Add Item</button>
+            </form>
+
+            <!-- Display list of items -->
+            <div id="itemsList"></div>
+        </div>
+
+        <script src="app.js"></script>
+    </body>
+    </html>
+    """,
+    
+    'styles.css': """
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background-color: #f4f4f4;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    input, button {
+        margin-bottom: 10px;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    button {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    #itemsList {
+        margin-top: 20px;
+    }
+
+    .item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 10px;
+    }
+
+    .item img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        margin-right: 15px;
+    }
+
+    .item-details {
+        flex: 1;
+    }
+
+    .item-name {
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .item-price {
+        color: green;
+    }
+    """,
+    
+    'app.js': """
+    document.getElementById('itemForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        // Get values from form inputs
+        const itemName = document.getElementById('itemName').value;
+        const itemPrice = document.getElementById('itemPrice').value;
+        const itemImage = document.getElementById('itemImage').files[0];
+
+        // Create a new item element
+        const itemDiv = document.createElement('div');
+        itemDiv.classList.add('item');
+
+        // Create an image element
+        const img = document.createElement('img');
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(itemImage);
+
+        // Create details (name and price)
+        const detailsDiv = document.createElement('div');
+        detailsDiv.classList.add('item-details');
+
+        const nameDiv = document.createElement('div');
+        nameDiv.classList.add('item-name');
+        nameDiv.textContent = itemName;
+
+        const priceDiv = document.createElement('div');
+        priceDiv.classList.add('item-price');
+        priceDiv.textContent = `$${itemPrice}`;
+
+        detailsDiv.appendChild(nameDiv);
+        detailsDiv.appendChild(priceDiv);
+
+        // Append image and details to the item div
+        itemDiv.appendChild(img);
+        itemDiv.appendChild(detailsDiv);
+
+        // Append the new item to the items list
+        document.getElementById('itemsList').appendChild(itemDiv);
+
+        // Clear form
+        document.getElementById('itemForm').reset();
+    });
+    """
+}
+
+# Create folder and save files
+os.makedirs(folders[0], exist_ok=True)
+
+for filename, content in files.items():
+    with open(os.path.join(folders[0], filename), 'w') as f:
+        f.write(content)
+
+"/mnt/data/for_sale_app folder created successfully with files."
